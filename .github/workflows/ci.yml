@@ -8,6 +8,7 @@ jobs:
     steps:
       - name: Remove unnecessary files
         run: |
+          sudo apt update
           sudo apt-get remove -y '^dotnet-.*'
           sudo apt-get remove -y '^llvm-.*'
           sudo apt-get remove -y '^temurin-.*'
