@@ -1,0 +1,27 @@
+name: CI
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build docker image
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          target: development
+          tags: my-test-image:${{ github.sha }}
+      - name: Run pytest
+        run: |
+          docker run \
+            --user root \
+            --entrypoint bash my-test-image:${{ github.sha }} -ce \
+            "pytest ."
+        if: always()
+      - name: Delete docker image
+        run: |
+          docker rmi my-test-image:${{ github.sha }} --force
+        if: always()
