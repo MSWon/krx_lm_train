@@ -1,0 +1,65 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove unnecessary files
+        run: |
+          sudo apt update
+          sudo apt-get remove -y '^dotnet-.*'
+          sudo apt-get remove -y '^llvm-.*'
+          sudo apt-get remove -y '^temurin-.*'
+          sudo apt-get remove -y '^mysql-server-core-.*'
+          sudo apt-get remove -y '^postgresql-.*'
+          sudo apt-get remove -y azure-cli google-chrome-stable google-cloud-cli firefox powershell microsoft-edge-stable mono-devel
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+
+          sudo rm -rf /usr/share/dotnet/
+          sudo rm -rf /usr/share/swift
+          sudo rm -rf /usr/share/miniconda
+          sudo rm -rf /usr/local/graalvm/
+          sudo rm -rf /usr/local/.ghcup/
+          sudo rm -rf /usr/local/share/powershell
+          sudo rm -rf /usr/local/share/chromium
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/local/lib/node_modules
+
+      - name: Remove remaining docker image
+        run: |
+          docker system prune -af --volumes || true
+
+      - name: Check disk space
+        run: df . -h
+
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          load: true
+          target: development
+          tags: my-test-image:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run pytest
+        run: |
+          docker run \
+            --user root \
+            --entrypoint bash my-test-image:${{ github.sha }} -ce \
+            "pytest ."
+        if: always()
+      - name: Delete docker image
+        run: |
+          docker rmi my-test-image:${{ github.sha }} --force
+          docker system prune -af --volumes || true
+        if: always()
