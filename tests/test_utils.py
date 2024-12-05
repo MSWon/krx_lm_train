@@ -1,9 +1,11 @@
+from pathlib import Path
 from krx_lm_train.utils import load_config
 
 
 def test_load_config():
+    resource_path = Path(__file__).parent / "resources"
     # Path to your configuration file
-    config_path = "configs/sft_config.yaml"
+    config_path = resource_path / "sft_config.yaml"
     config = load_config(config_path)
 
     # Test ModelConfig
