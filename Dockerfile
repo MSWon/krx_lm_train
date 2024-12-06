@@ -32,6 +32,7 @@ COPY poetry.lock poetry.lock
 RUN poetry install --no-cache --no-root --without dev
 
 COPY ${PACKAGE_NAME} ${PACKAGE_NAME}
+COPY configs ./configs
 
 # ------------------------
 # development image for CI
