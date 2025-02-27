@@ -2,7 +2,7 @@
 ### Option-1. Pull from docker hub (Recommended)
 - docker hub: https://hub.docker.com/r/twosubplace/krx_lm_train/tags
 ```sh
-docker pull twosubplace/krx_lm_train:0.3.0
+docker pull twosubplace/krx_lm_train:0.3.1
 ```
 
 ### Option-2. Build docker image in local
@@ -14,7 +14,7 @@ docker build --tag krx_lm_train:0.1.0 .
 
 - **Run with docker**
 ```
-docker run -it --entrypoint bash twosubplace/krx_lm_train:0.3.0
+docker run -it --entrypoint bash twosubplace/krx_lm_train:0.3.1
 ```
 
 - **SFT train**
@@ -34,7 +34,7 @@ python krx_lm_train/cpo_train.py --config configs/cpo_config.yaml
 docker ps -a
 
 CONTAINER ID   IMAGE                            COMMAND   CREATED      STATUS          PORTS     NAMES
-17e399a8e7ca   twosubplace/krx_lm_train:0.3.0   "bash"    2 days ago   Up 31 minutes             funny_kepler
+17e399a8e7ca   twosubplace/krx_lm_train:0.3.1   "bash"    2 days ago   Up 31 minutes             funny_kepler
 ```
 
 - attach to container
