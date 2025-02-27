@@ -26,3 +26,18 @@ python krx_lm_train/sft_train.py --config configs/sft_config.yaml
 ```
 python krx_lm_train/cpo_train.py --config configs/cpo_config.yaml
 ```
+
+
+## Docker attach
+
+```
+docker ps -a
+
+CONTAINER ID   IMAGE                            COMMAND   CREATED      STATUS          PORTS     NAMES
+17e399a8e7ca   twosubplace/krx_lm_train:0.3.0   "bash"    2 days ago   Up 31 minutes             funny_kepler
+```
+
+- attach to container
+```
+docker attach 17e399a8e7ca
+```
